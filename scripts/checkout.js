@@ -1,7 +1,17 @@
 import {cart,removeFromCart} from '../data/cart.js';
 import {products} from '../data/products.js';
-import { formatCurrency } from './utils/money.js';     
+import { formatCurrency } from './utils/money.js';   
+import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';  
+import {deliveryOptions} from '../data/deliveryOptions.js';
+
+
 let cartSummaryHTML = '';
+// Extend dayjs with plugins
+
+const today = dayjs();
+// const deliveryDate = today.add(3, 'day').format('dddd, MMMM D');
+// const deliveryDate2 = today.add(7, 'day').format('dddd, MMMM D');
+// const deliveryDate3 = today.add(10, 'day').format('dddd, MMMM D');
 
 cart.forEach((cartItem) => {
   const productId = cartItem.productId;
@@ -17,7 +27,7 @@ cart.forEach((cartItem) => {
     <div class="cart-item-container
     js-cart-item-container-${matchingProduct.id}">
       <div class="delivery-date">
-        Delivery date: Tuesday, June 21
+        <span class="delivery-date-value">${today.format('dddd, MMMM D, HH:mm:ss')}</span>
       </div>
 
       <div class="cart-item-details-grid">
@@ -48,52 +58,43 @@ cart.forEach((cartItem) => {
           <div class="delivery-options-title">
             Choose a delivery option:
           </div>
-          <div class="delivery-option">
-            <input type="radio" checked
-              class="delivery-option-input"
-              name="delivery-option-${matchingProduct.id}">
-            <div>
-              <div class="delivery-option-date">
-                Tuesday, June 21
-              </div>
-              <div class="delivery-option-price">
-                FREE Shipping
-              </div>
-            </div>
-          </div>
-          <div class="delivery-option">
-            <input type="radio"
-              class="delivery-option-input"
-              name="delivery-option-${matchingProduct.id}">
-            <div>
-              <div class="delivery-option-date">
-                Wednesday, June 15
-              </div>
-              <div class="delivery-option-price">
-                $4.99 - Shipping
-              </div>
-            </div>
-          </div>
-          <div class="delivery-option">
-            <input type="radio"
-              class="delivery-option-input"
-              name="delivery-option-${matchingProduct.id}">
-            <div>
-              <div class="delivery-option-date">
-                Monday, June 13
-              </div>
-              <div class="delivery-option-price">
-                $9.99 - Shipping
-              </div>
-            </div>
-          </div>
+          ${deliveryOptionsHTML(matchingProduct)}
+
         </div>
       </div>
     </div>
   `
 
 });
-console.log(cart);
+
+function deliveryOptionsHTML(matchingProduct){ 
+  let deliveryOptionsHTML = '';
+
+  deliveryOptions.forEach((deliveryOption) => {
+
+    const deliveryDateString = today.add(deliveryOption.deliveryDays, 'days').format('dddd, MMMM D');
+    const priceString = deliveryOption.priceCents === 0 ? 'FREE' : `$${formatCurrency(deliveryOption.priceCents)}`;
+    deliveryOptionsHTML += 
+    `
+      <div class="delivery-option">
+        <input type="radio" 
+          class="delivery-option-input"
+          name="delivery-option-${matchingProduct.id}">
+        <div>
+          <div class="delivery-option-date">
+            ${deliveryDateString}
+          </div>
+          <div class="delivery-option-price">
+            ${priceString} - Shipping
+          </div>
+        </div>
+      </div>
+    `
+  });
+  return deliveryOptionsHTML;
+}
+
+
 document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;
  
 document.querySelectorAll('.js-delete-link').forEach((link) => {
@@ -112,3 +113,11 @@ document.querySelectorAll('.js-delete-link').forEach((link) => {
 })
 
 
+function updateDeliveryTime() {
+  const deliveryDateElements = document.querySelectorAll('.delivery-date-value');
+  deliveryDateElements.forEach((element) => {
+    element.textContent = dayjs().format('dddd, MMMM D, HH:mm:ss');
+  });
+}
+// Call updateDeliveryTime every second
+setInterval(updateDeliveryTime, 1000);
