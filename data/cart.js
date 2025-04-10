@@ -27,4 +27,14 @@ export function addToCart(productId) {
   }
 }
 
-
+export function removeFromCart(productId) {
+  let matchingItemIndex;
+  cart.forEach((cartItem, index) => {
+    if(productId===cartItem.productId){
+      matchingItemIndex = index;
+    }
+  });
+  if(matchingItemIndex!==undefined){
+    cart.splice(matchingItemIndex, 1);
+  }
+}
