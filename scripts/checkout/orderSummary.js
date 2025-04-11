@@ -119,7 +119,7 @@ export function renderOrderSummary(){
       // cartItemContainer.remove();
       // remove from html solution 2
       document.querySelector(`.js-cart-item-container-${productId}`).remove();
-
+      renderPaymentSummary();
     });
 
   })
