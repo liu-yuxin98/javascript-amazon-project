@@ -209,3 +209,11 @@
   margin-top: 11px;
   margin-bottom: 15px;
 }
+
+.time-now {
+  color: rgb(0, 91, 118);
+  font-weight: 700;
+  font-size: 19px;
+  margin-top: 5px;
+  margin-bottom: 22px;
+}
