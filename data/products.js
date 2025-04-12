@@ -8,6 +8,24 @@ export function getProduct(productId){
   return matchingProduct;
 }
 
+// export let products = [];
+
+// export function lodaProducts(fun){
+//   const xhr = new XMLHttpRequest();
+
+//   xhr.addEventListener('load', () => {
+//     products = JSON.parse(xhr.response);
+//     console.log(products);
+//       after loading data we will call fun()
+//     fun()
+//   });
+
+//   xhr.open('GET', 'https://supersimplebackend.dev/products');
+//   xhr.send();
+
+// }
+
+// lodaProducts();
 
 export const products = [
   {
